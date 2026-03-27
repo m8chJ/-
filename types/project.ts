@@ -28,6 +28,9 @@ export type Project = {
   has_proposal: boolean
   has_presentation: boolean
   notes: string | null
+  rejection_reason: string | null
+  proposal_link: string | null
+  presentation_link: string | null
   created_at: string
   updated_at: string
 }
@@ -40,7 +43,7 @@ export const STATUS_LIST = [
   '지원예정',
   '공고 예정',
   '미선정',
-  '지원불가',
+  '지원취소',
   '검토중',
 ]
 
@@ -53,6 +56,6 @@ export const STATUS_COLORS: Record<string, string> = {
   '지원예정': 'bg-yellow-100 text-yellow-800',
   '공고 예정': 'bg-orange-100 text-orange-800',
   '미선정': 'bg-gray-100 text-gray-600',
-  '지원불가': 'bg-red-100 text-red-600',
+  '지원취소': 'bg-red-100 text-red-600',
   '검토중': 'bg-purple-100 text-purple-800',
 }
