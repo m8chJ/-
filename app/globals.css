@@ -129,7 +129,25 @@
   }
 }
 
-/* ── 모바일 반응형 ── */
+/* ── 레이아웃 기본 ── */
+.sidebar-wrapper {
+  flex-shrink: 0;
+}
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh;
+}
+.mobile-overlay {
+  display: none;
+}
+.mobile-topbar {
+  display: none;
+}
+
+/* ── 반응형 유틸리티 ── */
 .page-header { padding: 28px 32px 0; }
 .page-body   { padding: 20px 32px 32px; }
 .stats-grid  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
@@ -137,26 +155,84 @@
 .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
 .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.hero-number { font-size: 42px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+.hero-number  { font-size: 42px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+
+/* 히어로 통계 그룹 */
+.hero-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-stat-card { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 20px; min-width: 120px; }
+
+/* 사업비 히어로 3열 그리드 */
+.budget-hero-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+/* 사업비 히어로 진행바 그룹 */
+.budget-hero-bars { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.budget-hero-bar-item { background: rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px; min-width: 130px; }
+
+/* 과제 선택 셀렉트 */
+.project-select {
+  padding: 10px 16px; border: 1px solid #E8ECF0; border-radius: 10px;
+  font-size: 14px; font-weight: 600; color: #1e2c33; background-color: #fff;
+  outline: none; width: 100%; max-width: 400px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  font-family: inherit;
+}
 
 @media (max-width: 767px) {
+  /* ── 사이드바 드로어 ── */
+  .sidebar-wrapper {
+    position: fixed !important;
+    left: -240px;
+    top: 0;
+    z-index: 50;
+    height: 100vh;
+    transition: left 0.25s ease;
+    will-change: left;
+  }
+  .sidebar-wrapper.open {
+    left: 0 !important;
+  }
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 40;
+  }
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #1e2c33;
+    padding: 0 16px;
+    height: 52px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+
+  /* ── 패딩/레이아웃 ── */
   .page-header { padding: 16px 16px 0 !important; }
   .page-body   { padding: 12px 16px 24px !important; }
+  .hero-banner { padding: 18px 16px 20px !important; }
+  .hero-number { font-size: 28px !important; }
+  .page-title  { font-size: 18px !important; }
 
-  .stats-grid  { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  /* ── 통계 그리드 ── */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
 
+  /* ── 히어로 통계 카드 ── */
+  .hero-stat-card { min-width: 0 !important; flex: 1 1 calc(50% - 8px); padding: 12px 14px !important; }
+
+  /* ── 사업비 히어로 ── */
+  .budget-hero-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  .budget-hero-bar-item { min-width: 0 !important; flex: 1 1 calc(50% - 5px); }
+
+  /* ── 폼 그리드 ── */
   .form-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
   .form-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
   .form-grid-2 { grid-template-columns: 1fr !important; }
 
-  .hero-number { font-size: 30px !important; }
-
-  /* 히어로 배너 패딩 */
-  .hero-banner { padding: 20px 18px 22px !important; }
-
-  /* 헤더 타이틀 */
-  .page-title  { font-size: 18px !important; }
-
-  /* 카드 패딩 */
-  .card-pad    { padding: 14px 16px !important; }
+  /* ── 과제 선택 ── */
+  .project-select { max-width: 100% !important; }
 }

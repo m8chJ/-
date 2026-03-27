@@ -116,12 +116,12 @@ export default function Home() {
         <div
           style={{
             borderRadius: 16,
-            padding: '28px 32px',
             marginBottom: 20,
             background: 'linear-gradient(135deg, #1e2c33 0%, #2d4a5a 60%, #384e5d 100%)',
             position: 'relative',
             overflow: 'hidden',
             boxShadow: '0 4px 20px rgba(30, 44, 51, 0.2)',
+            padding: '28px 32px',
           }}
           className="hero-banner"
         >

@@ -175,8 +175,7 @@ export default function BudgetPage() {
       <div className="page-body">
         {/* 과제 선택 */}
         <div style={{ marginBottom: 20 }}>
-          <select value={selectedId ?? ''} onChange={e => setSelectedId(e.target.value)}
-            style={{ padding: '10px 16px', border: '1px solid #E8ECF0', borderRadius: 10, fontSize: 14, fontWeight: 600, color: '#1e2c33', backgroundColor: '#fff', fontFamily: 'inherit', outline: 'none', minWidth: 340, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+          <select value={selectedId ?? ''} onChange={e => setSelectedId(e.target.value)} className="project-select">
             {projects.map(p => <option key={p.id} value={p.id}>{p.project_name}</option>)}
           </select>
           {projects.length === 0 && <p style={{ fontSize: 13, color: '#adbac9', marginTop: 8 }}>진행 중인 과제가 없습니다.</p>}
@@ -186,7 +185,7 @@ export default function BudgetPage() {
           {/* 히어로 배너 */}
           <div className="hero-banner" style={{ background: 'linear-gradient(135deg, #1e2c33 0%, #384e5d 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 20, boxShadow: '0 4px 20px rgba(30,44,51,0.2)' }}>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>{selectedProject.project_name}</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
+            <div className="budget-hero-grid">
               {[
                 { label: '총 계획액', value: fmtKRW(summary.totalPlanned), sub: `${budgetItems.length}개 비목`, color: 'rgba(255,255,255,0.4)' },
                 { label: '집행액', value: fmtKRW(summary.totalExecuted), sub: summary.totalPlanned > 0 ? `${((summary.totalExecuted / summary.totalPlanned) * 100).toFixed(1)}% 집행` : '0% 집행', color: 'rgba(255,255,255,0.4)' },
@@ -202,14 +201,14 @@ export default function BudgetPage() {
 
             {/* 대분류별 진행 바 */}
             {Object.keys(summary.byGroup).length > 0 && (
-              <div style={{ marginTop: 20, display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              <div className="budget-hero-bars">
                 {BUDGET_CATEGORIES.map(g => {
                   const data = summary.byGroup[g.group]
                   if (!data || data.planned === 0) return null
                   const rate = (data.executed / data.planned) * 100
                   const c = GROUP_COLORS[g.group]
                   return (
-                    <div key={g.group} style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 14px', minWidth: 130 }}>
+                    <div key={g.group} className="budget-hero-bar-item">
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>{g.group}</span>
                         <span style={{ fontSize: 11, fontWeight: 700, color: rate > 90 ? '#FCA5A5' : 'rgba(255,255,255,0.8)' }}>{rate.toFixed(0)}%</span>

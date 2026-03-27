@@ -235,13 +235,13 @@ export default function ParticipationPage() {
         <h1 className="page-title" style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 20 }}>
           참여율 관리
         </h1>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div className="hero-stats">
           {[
             { label: '등록 인력', value: `${employeeSummary.length}명`, alert: false },
             { label: '참여율 초과', value: `${totalOverCount}명`, alert: totalOverCount > 0 },
             { label: '총 인건비', value: formatMillions(grandTotalLaborCost), alert: false },
           ].map(stat => (
-            <div key={stat.label} style={{ backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: '14px 20px', minWidth: 120 }}>
+            <div key={stat.label} className="hero-stat-card">
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 4 }}>{stat.label}</p>
               <p style={{ fontSize: 22, fontWeight: 800, color: stat.alert ? '#FCA5A5' : '#fff' }}>{stat.value}</p>
             </div>
@@ -387,7 +387,7 @@ ADD COLUMN IF NOT EXISTS period_months NUMERIC DEFAULT 0;`}
               <select
                 value={selectedProjectId ?? ''}
                 onChange={e => { setSelectedProjectId(e.target.value); setShowForm(false) }}
-                style={{ padding: '10px 16px', border: '1px solid #E8ECF0', borderRadius: 10, fontSize: 14, fontWeight: 600, color: '#1e2c33', backgroundColor: '#fff', fontFamily: 'inherit', outline: 'none', minWidth: 280 }}
+                className="project-select"
               >
                 {projects.map(p => <option key={p.id} value={p.id}>{p.project_name}</option>)}
               </select>
