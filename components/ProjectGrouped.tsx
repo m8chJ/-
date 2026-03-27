@@ -115,57 +115,61 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
   return (
     <div>
       {/* 검색 + 필터 + 추가 버튼 */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20, alignItems: 'center' }}>
-        <input
-          type="text"
-          placeholder="사업명, 부처, 담당자로 검색..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={{
-            padding: '9px 14px',
-            border: '1px solid #E8ECF0',
-            borderRadius: 10,
-            fontSize: 13,
-            outline: 'none',
-            width: 220,
-            color: '#1e2c33',
-            fontFamily: 'inherit',
-          }}
-        />
-        <select
-          value={managerFilter}
-          onChange={e => setManagerFilter(e.target.value)}
-          style={{
-            padding: '9px 14px',
-            border: '1px solid #E8ECF0',
-            borderRadius: 10,
-            fontSize: 13,
-            outline: 'none',
-            color: '#707d89',
-            fontFamily: 'inherit',
-            backgroundColor: '#ffffff',
-          }}
-        >
-          {managers.map(m => <option key={m}>{m}</option>)}
-        </select>
-        <div style={{ marginLeft: 'auto' }}>
-          <button
-            onClick={() => setShowAddModal(true)}
+      <div className="project-toolbar">
+        <div className="project-toolbar-filters">
+          <input
+            type="text"
+            placeholder="사업명, 부처, 담당자로 검색..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
             style={{
-              padding: '9px 18px',
+              padding: '9px 14px',
+              border: '1px solid #E8ECF0',
               borderRadius: 10,
-              backgroundColor: '#1e2c33',
-              color: '#ffffff',
               fontSize: 13,
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
+              outline: 'none',
+              color: '#1e2c33',
               fontFamily: 'inherit',
+              flex: 1,
+              minWidth: 0,
+            }}
+          />
+          <select
+            value={managerFilter}
+            onChange={e => setManagerFilter(e.target.value)}
+            style={{
+              padding: '9px 14px',
+              border: '1px solid #E8ECF0',
+              borderRadius: 10,
+              fontSize: 13,
+              outline: 'none',
+              color: '#707d89',
+              fontFamily: 'inherit',
+              backgroundColor: '#ffffff',
+              flexShrink: 0,
             }}
           >
-            + 공고 추가
-          </button>
+            {managers.map(m => <option key={m}>{m}</option>)}
+          </select>
         </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          style={{
+            padding: '9px 18px',
+            borderRadius: 10,
+            backgroundColor: '#1e2c33',
+            color: '#ffffff',
+            fontSize: 13,
+            fontWeight: 600,
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          + 공고 추가
+        </button>
       </div>
 
       {/* 상태별 섹션 */}

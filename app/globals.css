@@ -120,12 +120,16 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
   html {
     @apply font-sans;
+    overflow-x: hidden;
   }
 }
 
@@ -174,6 +178,20 @@
   font-size: 14px; font-weight: 600; color: #1e2c33; background-color: #fff;
   outline: none; width: 100%; max-width: 400px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   font-family: inherit;
+}
+
+/* 공고 목록 툴바 */
+.project-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.project-toolbar-filters {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 @media (max-width: 767px) {
@@ -235,4 +253,8 @@
 
   /* ── 과제 선택 ── */
   .project-select { max-width: 100% !important; }
+
+  /* ── 공고 목록 툴바 ── */
+  .project-toolbar { flex-wrap: wrap; }
+  .project-toolbar-filters { min-width: 0; }
 }
