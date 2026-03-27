@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
@@ -46,23 +47,14 @@ export default function Sidebar() {
       }}
     >
       {/* 로고 */}
-      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid #F0F3F6' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              backgroundColor: '#1e2c33',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span style={{ color: 'white', fontSize: 13, fontWeight: 800, letterSpacing: '-0.5px' }}>FIT</span>
-          </div>
-          <span style={{ fontSize: 15, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.3px' }}>핏투게더</span>
-        </div>
+      <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid #F0F3F6' }}>
+        <Image
+          src="/logo.png"
+          alt="Fitogether"
+          width={120}
+          height={36}
+          style={{ objectFit: 'contain', objectPosition: 'left' }}
+        />
         <div
           style={{
             fontSize: 11,
@@ -71,6 +63,7 @@ export default function Sidebar() {
             borderRadius: 6,
             padding: '4px 8px',
             display: 'inline-block',
+            marginTop: 10,
           }}
         >
           정부지원사업 관리
