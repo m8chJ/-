@@ -104,14 +104,14 @@ export default function Home() {
   return (
     <div style={{ minHeight: '100vh' }}>
       {/* 페이지 헤더 */}
-      <div style={{ padding: '28px 32px 0' }}>
+      <div className="page-header">
         <p style={{ fontSize: 12, color: '#adbac9', marginBottom: 4 }}>안녕하세요, 핏투게더 팀</p>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>
+        <h1 className="page-title" style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>
           정부지원사업 대시보드
         </h1>
       </div>
 
-      <div style={{ padding: '20px 32px 32px' }}>
+      <div className="page-body">
         {/* 히어로 배너 */}
         <div
           style={{
@@ -123,6 +123,7 @@ export default function Home() {
             overflow: 'hidden',
             boxShadow: '0 4px 20px rgba(30, 44, 51, 0.2)',
           }}
+          className="hero-banner"
         >
           {/* 배경 장식 */}
           <div style={{
@@ -141,9 +142,9 @@ export default function Home() {
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 10 }}>
             (주)핏투게더 · 현재 관리중인 정부사업
           </p>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 8, flexWrap: 'wrap' }}>
             <div>
-              <span style={{ fontSize: 42, fontWeight: 800, color: '#ffffff', letterSpacing: '-1px' }}>
+              <span className="hero-number">
                 {activeCount}
               </span>
               <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.7)', marginLeft: 4 }}>건</span>
@@ -152,7 +153,7 @@ export default function Home() {
               <>
                 <div style={{ width: 1, height: 36, backgroundColor: 'rgba(255,255,255,0.2)' }} />
                 <div>
-                  <span style={{ fontSize: 42, fontWeight: 800, color: '#ffffff', letterSpacing: '-1px' }}>
+                  <span className="hero-number">
                     {totalFunding.toFixed(1)}
                   </span>
                   <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.7)', marginLeft: 4 }}>억원 확정</span>
@@ -166,7 +167,7 @@ export default function Home() {
         </div>
 
         {/* 통계 카드 */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
+        <div className="stats-grid">
           {stats.map(s => (
             <div
               key={s.label}

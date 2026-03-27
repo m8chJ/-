@@ -114,14 +114,14 @@ export default function RecommendPage() {
   return (
     <div style={{ minHeight: '100vh' }}>
       {/* 페이지 헤더 */}
-      <div style={{ padding: '28px 32px 0' }}>
+      <div className="page-header">
         <p style={{ fontSize: 12, color: '#adbac9', marginBottom: 4 }}>AI 기반 맞춤 공고 분석</p>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>
+        <h1 className="page-title" style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>
           공고 추천
         </h1>
       </div>
 
-      <div style={{ padding: '20px 32px 32px' }}>
+      <div className="page-body">
         {/* 히어로 배너 */}
         <div
           style={{
@@ -135,7 +135,10 @@ export default function RecommendPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 16,
           }}
+          className="hero-banner"
         >
           <div style={{ position: 'absolute', right: -20, top: -20, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
           <div>

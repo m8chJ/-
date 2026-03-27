@@ -128,3 +128,35 @@
     @apply font-sans;
   }
 }
+
+/* ── 모바일 반응형 ── */
+.page-header { padding: 28px 32px 0; }
+.page-body   { padding: 20px 32px 32px; }
+.stats-grid  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+.form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+.form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.hero-number { font-size: 42px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+
+@media (max-width: 767px) {
+  .page-header { padding: 16px 16px 0 !important; }
+  .page-body   { padding: 12px 16px 24px !important; }
+
+  .stats-grid  { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+
+  .form-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .form-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+  .form-grid-2 { grid-template-columns: 1fr !important; }
+
+  .hero-number { font-size: 30px !important; }
+
+  /* 히어로 배너 패딩 */
+  .hero-banner { padding: 20px 18px 22px !important; }
+
+  /* 헤더 타이틀 */
+  .page-title  { font-size: 18px !important; }
+
+  /* 카드 패딩 */
+  .card-pad    { padding: 14px 16px !important; }
+}

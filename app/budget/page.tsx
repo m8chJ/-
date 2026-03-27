@@ -167,12 +167,12 @@ export default function BudgetPage() {
 
   return (
     <div style={{ minHeight: '100vh' }}>
-      <div style={{ padding: '28px 32px 0' }}>
+      <div className="page-header">
         <p style={{ fontSize: 12, color: '#adbac9', marginBottom: 4 }}>비목별 예산 및 집행내역 관리</p>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>사업비 관리</h1>
+        <h1 className="page-title" style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>사업비 관리</h1>
       </div>
 
-      <div style={{ padding: '20px 32px 32px' }}>
+      <div className="page-body">
         {/* 과제 선택 */}
         <div style={{ marginBottom: 20 }}>
           <select value={selectedId ?? ''} onChange={e => setSelectedId(e.target.value)}
@@ -184,7 +184,7 @@ export default function BudgetPage() {
 
         {selectedProject && (<>
           {/* 히어로 배너 */}
-          <div style={{ background: 'linear-gradient(135deg, #1e2c33 0%, #384e5d 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 20, boxShadow: '0 4px 20px rgba(30,44,51,0.2)' }}>
+          <div className="hero-banner" style={{ background: 'linear-gradient(135deg, #1e2c33 0%, #384e5d 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 20, boxShadow: '0 4px 20px rgba(30,44,51,0.2)' }}>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>{selectedProject.project_name}</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
               {[
@@ -246,7 +246,7 @@ export default function BudgetPage() {
 
               {showBudgetForm && (
                 <div style={{ padding: '16px 20px', backgroundColor: '#F9FAFB', borderBottom: '1px solid #F0F3F6' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-3" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr', gap: 10, marginBottom: 10 }}>
                     <select value={bf.category} onChange={e => setBf(p => ({ ...p, category: e.target.value }))} style={inputStyle}>
                       {BUDGET_CATEGORIES.map(g => (
                         <optgroup key={g.group} label={g.group}>
@@ -316,7 +316,7 @@ export default function BudgetPage() {
 
               {showExpenseForm && (
                 <div style={{ padding: '16px 20px', backgroundColor: '#F9FAFB', borderBottom: '1px solid #F0F3F6' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
                     <select value={ef.category} onChange={e => setEf(p => ({ ...p, category: e.target.value }))} style={inputStyle}>
                       {BUDGET_CATEGORIES.map(g => (
                         <optgroup key={g.group} label={g.group}>
@@ -327,12 +327,12 @@ export default function BudgetPage() {
                     <input type="date" value={ef.expense_date} onChange={e => setEf(p => ({ ...p, expense_date: e.target.value }))} style={inputStyle} />
                     <input placeholder="이체일자" type="date" value={ef.transfer_date} onChange={e => setEf(p => ({ ...p, transfer_date: e.target.value }))} style={inputStyle} />
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
                     <input placeholder="내용 *" value={ef.description} onChange={e => setEf(p => ({ ...p, description: e.target.value }))} style={inputStyle} />
                     <input placeholder="거래처" value={ef.vendor} onChange={e => setEf(p => ({ ...p, vendor: e.target.value }))} style={inputStyle} />
                     <input placeholder="내부결재번호" value={ef.internal_ref} onChange={e => setEf(p => ({ ...p, internal_ref: e.target.value }))} style={inputStyle} />
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 10 }}>
                     <input type="number" placeholder="공급가액 (원) *" value={ef.supply_amount} onChange={e => setEf(p => ({ ...p, supply_amount: e.target.value }))} style={inputStyle} />
                     <input type="number" placeholder="VAT (원)" value={ef.vat_amount} onChange={e => setEf(p => ({ ...p, vat_amount: e.target.value }))} style={inputStyle} />
                     <div style={{ ...inputStyle, display: 'flex', alignItems: 'center', color: '#384e5d', fontWeight: 700, cursor: 'default' }}>

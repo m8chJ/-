@@ -232,7 +232,7 @@ export default function ParticipationPage() {
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 4, letterSpacing: '0.3px' }}>
           인력별 과제 참여율 관리 (합계 100% 이하)
         </p>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 20 }}>
+        <h1 className="page-title" style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', marginBottom: 20 }}>
           참여율 관리
         </h1>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -433,7 +433,7 @@ ADD COLUMN IF NOT EXISTS period_months NUMERIC DEFAULT 0;`}
               {/* 입력 폼 */}
               {showForm && (
                 <div style={{ padding: '18px 20px', backgroundColor: '#F9FAFB', borderBottom: '1px solid #F0F3F6' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 10 }}>
                     <div>
                       <label style={labelStyle}>이름 *</label>
                       <input
@@ -464,7 +464,7 @@ ADD COLUMN IF NOT EXISTS period_months NUMERIC DEFAULT 0;`}
                       </select>
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
+                  <div className="form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
                     <div>
                       <label style={labelStyle}>연봉 (원)</label>
                       <input
@@ -498,7 +498,7 @@ ADD COLUMN IF NOT EXISTS period_months NUMERIC DEFAULT 0;`}
                       />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+                  <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
                     <div>
                       <label style={labelStyle}>참여 시작일</label>
                       <input type="date" value={form.period_start} onChange={e => setForm(p => ({ ...p, period_start: e.target.value }))} style={inputStyle} />
