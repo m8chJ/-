@@ -21,11 +21,11 @@ function getDday(dateStr: string | null): { label: string; color: string } | nul
   today.setHours(0, 0, 0, 0)
   end.setHours(0, 0, 0, 0)
   const diff = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  if (diff < 0) return { label: '마감', color: 'text-gray-400' }
-  if (diff === 0) return { label: 'D-Day', color: 'text-red-600 font-bold' }
-  if (diff <= 7) return { label: `D-${diff}`, color: 'text-red-500 font-semibold' }
-  if (diff <= 14) return { label: `D-${diff}`, color: 'text-orange-500' }
-  return { label: `D-${diff}`, color: 'text-gray-400' }
+  if (diff < 0) return { label: '마감', color: '#adbac9' }
+  if (diff === 0) return { label: 'D-Day', color: '#EF4444' }
+  if (diff <= 7) return { label: `D-${diff}`, color: '#EF4444' }
+  if (diff <= 14) return { label: `D-${diff}`, color: '#F97316' }
+  return { label: `D-${diff}`, color: '#adbac9' }
 }
 
 const STATUS_ORDER = [
@@ -115,26 +115,53 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
   return (
     <div>
       {/* 검색 + 필터 + 추가 버튼 */}
-      <div className="flex flex-wrap gap-3 mb-6 items-center">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20, alignItems: 'center' }}>
         <input
           type="text"
           placeholder="사업명, 부처, 담당자로 검색..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1e2c33] w-56"
+          style={{
+            padding: '9px 14px',
+            border: '1px solid #E8ECF0',
+            borderRadius: 10,
+            fontSize: 13,
+            outline: 'none',
+            width: 220,
+            color: '#1e2c33',
+            fontFamily: 'inherit',
+          }}
         />
         <select
           value={managerFilter}
           onChange={e => setManagerFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1e2c33] text-gray-600"
+          style={{
+            padding: '9px 14px',
+            border: '1px solid #E8ECF0',
+            borderRadius: 10,
+            fontSize: 13,
+            outline: 'none',
+            color: '#707d89',
+            fontFamily: 'inherit',
+            backgroundColor: '#ffffff',
+          }}
         >
           {managers.map(m => <option key={m}>{m}</option>)}
         </select>
-        <div className="ml-auto">
+        <div style={{ marginLeft: 'auto' }}>
           <button
             onClick={() => setShowAddModal(true)}
-            style={{ backgroundColor: '#1e2c33' }}
-            className="px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90"
+            style={{
+              padding: '9px 18px',
+              borderRadius: 10,
+              backgroundColor: '#1e2c33',
+              color: '#ffffff',
+              fontSize: 13,
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
           >
             + 공고 추가
           </button>
@@ -142,42 +169,55 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
       </div>
 
       {/* 상태별 섹션 */}
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {grouped.map(({ status, items }) => {
           const isCollapsed = collapsed[status] ?? false
           const badgeColor = STATUS_COLORS[status] ?? 'bg-gray-100 text-gray-600'
 
           return (
-            <div key={status} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div
+              key={status}
+              style={{
+                border: '1px solid #F0F3F6',
+                borderRadius: 12,
+                overflow: 'hidden',
+                backgroundColor: '#ffffff',
+              }}
+            >
               {/* 섹션 헤더 */}
               <button
-                className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition-colors text-left"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '14px 18px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  fontFamily: 'inherit',
+                }}
                 onClick={() => toggleCollapse(status)}
               >
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeColor}`}>
                   {status}
                 </span>
-                <span className="text-gray-500 text-sm">{items.length}건</span>
-                <span className="ml-auto text-gray-400 text-sm">{isCollapsed ? '▶' : '▼'}</span>
+                <span style={{ fontSize: 12, color: '#adbac9' }}>{items.length}건</span>
+                <span style={{ marginLeft: 'auto', color: '#ced7df', fontSize: 11 }}>{isCollapsed ? '▶' : '▼'}</span>
               </button>
 
               {/* 테이블 */}
               {!isCollapsed && (
-                <div className="border-t border-gray-100 overflow-x-auto">
-                  <table className="w-full text-sm">
+                <div style={{ borderTop: '1px solid #F5F7FA', overflowX: 'auto' }}>
+                  <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr className="bg-gray-50 border-b border-gray-100">
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">구분</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">주관부처</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500">사업명</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">마감일</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">D-day</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">규모(억)</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">배정 사업비</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">연구책임자</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">작성 담당자</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">제안서</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-gray-500 whitespace-nowrap">발표자료</th>
+                      <tr style={{ backgroundColor: '#FAFBFC' }}>
+                        {['구분', '주관부처', '사업명', '마감일', 'D-day', '규모', '배정예산', '연구책임자', '작성담당자', '제안서', '발표자료'].map(h => (
+                          <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 600, color: '#adbac9', whiteSpace: 'nowrap', fontSize: 11, letterSpacing: '0.2px' }}>
+                            {h}
+                          </th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody>
@@ -186,48 +226,52 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
                         return (
                           <tr
                             key={p.id}
-                            className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
+                            style={{ borderTop: '1px solid #F5F7FA', cursor: 'pointer', transition: 'background 0.1s' }}
                             onClick={() => setSelectedProject(p)}
+                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = '#FAFBFC'}
+                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'}
                           >
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              <span className={`text-xs px-2 py-0.5 rounded font-medium ${
-                                p.category === 'R&D' ? 'bg-violet-100 text-violet-700'
-                                : p.category === '금융 지원' ? 'bg-sky-100 text-sky-700'
-                                : 'bg-emerald-100 text-emerald-700'
-                              }`}>
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
+                              <span style={{
+                                fontSize: 11, padding: '2px 8px', borderRadius: 5, fontWeight: 600,
+                                backgroundColor: p.category === 'R&D' ? '#F5F3FF' : p.category === '금융 지원' ? '#EFF6FF' : '#ECFDF3',
+                                color: p.category === 'R&D' ? '#7C3AED' : p.category === '금융 지원' ? '#2563EB' : '#059669',
+                              }}>
                                 {p.category ?? '-'}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{p.ministry ?? '-'}</td>
-                            <td className="px-4 py-3 text-gray-900 font-medium max-w-xs">
-                              <div className="truncate">{p.project_name}</div>
+                            <td style={{ padding: '12px 14px', color: '#384e5d', whiteSpace: 'nowrap' }}>{p.ministry ?? '-'}</td>
+                            <td style={{ padding: '12px 14px', maxWidth: 260 }}>
+                              <div style={{ fontWeight: 600, color: '#1e2c33', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.project_name}</div>
                               {p.our_project_name && p.our_project_name !== p.project_name && (
-                                <div className="text-xs text-gray-400 truncate mt-0.5">{p.our_project_name}</div>
+                                <div style={{ fontSize: 11, color: '#adbac9', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 2 }}>{p.our_project_name}</div>
                               )}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap', color: '#707d89' }}>
                               {p.application_end ? p.application_end.slice(0, 10) : '-'}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              {dday ? <span className={`text-xs font-medium ${dday.color}`}>{dday.label}</span> : '-'}
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
+                              {dday
+                                ? <span style={{ fontSize: 12, fontWeight: 700, color: dday.color }}>{dday.label}</span>
+                                : <span style={{ color: '#ced7df' }}>-</span>}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-700">
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap', color: '#384e5d' }}>
                               {p.scale_100m ? `${p.scale_100m}억` : '-'}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-gray-700">
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap', color: '#384e5d' }}>
                               {p.budget_total ? `${p.budget_total}억` : '-'}
                             </td>
-                            <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{p.manager ?? '-'}</td>
-                            <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{p.writer ?? '-'}</td>
-                            <td className="px-4 py-3 text-center" onClick={e => e.stopPropagation()}>
+                            <td style={{ padding: '12px 14px', color: '#707d89', whiteSpace: 'nowrap' }}>{p.manager ?? '-'}</td>
+                            <td style={{ padding: '12px 14px', color: '#707d89', whiteSpace: 'nowrap' }}>{p.writer ?? '-'}</td>
+                            <td style={{ padding: '12px 14px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
                               {p.proposal_link
-                                ? <a href={p.proposal_link} target="_blank" rel="noopener noreferrer" className="text-[#1e2c33] hover:underline text-xs">열기 🔗</a>
-                                : <span className="text-gray-300">-</span>}
+                                ? <a href={p.proposal_link} target="_blank" rel="noopener noreferrer" style={{ color: '#1e2c33', fontSize: 12, fontWeight: 500, textDecoration: 'none' }}>열기 ↗</a>
+                                : <span style={{ color: '#ced7df' }}>-</span>}
                             </td>
-                            <td className="px-4 py-3 text-center" onClick={e => e.stopPropagation()}>
+                            <td style={{ padding: '12px 14px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
                               {p.presentation_link
-                                ? <a href={p.presentation_link} target="_blank" rel="noopener noreferrer" className="text-[#1e2c33] hover:underline text-xs">열기 🔗</a>
-                                : <span className="text-gray-300">-</span>}
+                                ? <a href={p.presentation_link} target="_blank" rel="noopener noreferrer" style={{ color: '#1e2c33', fontSize: 12, fontWeight: 500, textDecoration: 'none' }}>열기 ↗</a>
+                                : <span style={{ color: '#ced7df' }}>-</span>}
                             </td>
                           </tr>
                         )

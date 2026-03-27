@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 type Recommendation = {
   id: string
@@ -20,13 +19,26 @@ type Recommendation = {
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color =
-    score >= 80 ? 'bg-green-100 text-green-800' :
-    score >= 60 ? 'bg-blue-100 text-blue-800' :
-    score >= 40 ? 'bg-yellow-100 text-yellow-800' :
-    'bg-gray-100 text-gray-500'
+  const style =
+    score >= 80
+      ? { bg: '#ECFDF3', color: '#12B76A' }
+      : score >= 60
+      ? { bg: '#EFF6FF', color: '#2563EB' }
+      : { bg: '#F5F5F5', color: '#9CA3AF' }
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${color}`}>
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '2px 8px',
+        borderRadius: 20,
+        fontSize: 11,
+        fontWeight: 700,
+        backgroundColor: style.bg,
+        color: style.color,
+        whiteSpace: 'nowrap',
+      }}
+    >
       {score}점
     </span>
   )
@@ -39,11 +51,24 @@ function getDday(dateStr: string | null) {
   today.setHours(0, 0, 0, 0)
   end.setHours(0, 0, 0, 0)
   const diff = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  if (diff < 0) return { label: '마감', color: 'text-gray-400' }
-  if (diff === 0) return { label: 'D-Day', color: 'text-red-600 font-bold' }
-  if (diff <= 7) return { label: `D-${diff}`, color: 'text-red-500 font-semibold' }
-  if (diff <= 14) return { label: `D-${diff}`, color: 'text-orange-500' }
-  return { label: `D-${diff}`, color: 'text-gray-400' }
+  if (diff < 0) return { label: '마감', color: '#9CA3AF' }
+  if (diff === 0) return { label: 'D-Day', color: '#EF4444' }
+  if (diff <= 7) return { label: `D-${diff}`, color: '#EF4444' }
+  if (diff <= 14) return { label: `D-${diff}`, color: '#F97316' }
+  return { label: `D-${diff}`, color: '#9CA3AF' }
+}
+
+function SourceBadge({ source }: { source: string }) {
+  const map: Record<string, { label: string; color: string; bg: string }> = {
+    mss: { label: '중기부', color: '#2563EB', bg: '#EFF6FF' },
+    kocca: { label: 'KOCCA', color: '#7C3AED', bg: '#F5F3FF' },
+  }
+  const s = map[source] ?? { label: source, color: '#6B7280', bg: '#F5F5F5' }
+  return (
+    <span style={{ fontSize: 10, fontWeight: 600, color: s.color, backgroundColor: s.bg, padding: '2px 6px', borderRadius: 4 }}>
+      {s.label}
+    </span>
+  )
 }
 
 export default function RecommendPage() {
@@ -71,12 +96,8 @@ export default function RecommendPage() {
     try {
       const res = await fetch('/api/recommendations', { method: 'POST' })
       const json = await res.json()
-      if (json.error) {
-        setFetchResult(`오류: ${json.error}`)
-      } else {
-        setFetchResult(json.message ?? '완료')
-        await loadRecommendations()
-      }
+      setFetchResult(json.error ? `오류: ${json.error}` : json.message ?? '완료')
+      if (!json.error) await loadRecommendations()
     } catch {
       setFetchResult('네트워크 오류가 발생했습니다.')
     }
@@ -84,98 +105,167 @@ export default function RecommendPage() {
   }
 
   const filtered = items.filter(i => i.match_score >= minScore)
-  const lastFetched = items.length > 0 ? new Date(items[0].fetched_at).toLocaleDateString('ko-KR') : null
+  const highMatch = items.filter(i => i.match_score >= 80).length
+  const midMatch = items.filter(i => i.match_score >= 60 && i.match_score < 80).length
+  const lastFetched = items.length > 0
+    ? new Date(items[0].fetched_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })
+    : null
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header style={{ backgroundColor: '#1e2c33' }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div style={{ minHeight: '100vh' }}>
+      {/* 페이지 헤더 */}
+      <div style={{ padding: '28px 32px 0' }}>
+        <p style={{ fontSize: 12, color: '#adbac9', marginBottom: 4 }}>AI 기반 맞춤 공고 분석</p>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1e2c33', letterSpacing: '-0.5px' }}>
+          공고 추천
+        </h1>
+      </div>
+
+      <div style={{ padding: '20px 32px 32px' }}>
+        {/* 히어로 배너 */}
+        <div
+          style={{
+            borderRadius: 16,
+            padding: '28px 32px',
+            marginBottom: 20,
+            background: 'linear-gradient(135deg, #1e2c33 0%, #2d4a5a 60%, #384e5d 100%)',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 4px 20px rgba(30, 44, 51, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ position: 'absolute', right: -20, top: -20, width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
           <div>
-            <h1 className="text-xl font-bold text-white">공고 추천</h1>
-            <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              핏투게더 맞춤 정부지원사업 공고 AI 매칭
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 10 }}>
+              핏투게더 맞춤형 · 중기부 + KOCCA 공고 AI 분석
+            </p>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 8 }}>
+              <div>
+                <span style={{ fontSize: 42, fontWeight: 800, color: '#ffffff', letterSpacing: '-1px' }}>{highMatch}</span>
+                <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', marginLeft: 4 }}>건 적극 추천</span>
+              </div>
+              {midMatch > 0 && (
+                <>
+                  <div style={{ width: 1, height: 30, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+                  <div>
+                    <span style={{ fontSize: 28, fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '-0.5px' }}>{midMatch}</span>
+                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginLeft: 4 }}>건 검토 권장</span>
+                  </div>
+                </>
+              )}
+            </div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+              {lastFetched ? `마지막 업데이트: ${lastFetched}` : '아직 공고를 가져오지 않았습니다'}
             </p>
           </div>
-          <Link
-            href="/"
-            className="text-sm px-4 py-2 rounded-lg border border-white/20 text-white/80 hover:bg-white/10 transition-colors"
-          >
-            ← 공고 관리
-          </Link>
-        </div>
-      </header>
-
-      {/* 컨트롤 바 */}
-      <div style={{ backgroundColor: '#384e5d' }}>
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4 flex-wrap">
           <button
             onClick={fetchNew}
             disabled={fetching}
-            style={{ backgroundColor: fetching ? '#707d89' : '#ecf0f4', color: '#1e2c33' }}
-            className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:cursor-not-allowed"
+            style={{
+              padding: '12px 22px',
+              borderRadius: 10,
+              backgroundColor: fetching ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.15)',
+              color: fetching ? 'rgba(255,255,255,0.4)' : '#ffffff',
+              border: '1px solid rgba(255,255,255,0.2)',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: fetching ? 'not-allowed' : 'pointer',
+              whiteSpace: 'nowrap',
+              backdropFilter: 'blur(10px)',
+              flexShrink: 0,
+            }}
           >
-            {fetching ? '분석 중...' : '새 공고 가져오기'}
+            {fetching ? '분석 중...' : '새 공고 분석'}
           </button>
-          {fetchResult && (
-            <span className="text-white/80 text-sm">{fetchResult}</span>
-          )}
-          {lastFetched && !fetchResult && (
-            <span className="text-white/50 text-xs">마지막 업데이트: {lastFetched}</span>
-          )}
-          <div className="ml-auto flex items-center gap-2">
-            <span className="text-white/60 text-sm">최소 점수</span>
-            {[30, 40, 60, 80].map(s => (
+        </div>
+
+        {fetchResult && (
+          <div style={{
+            backgroundColor: '#F0FDF4',
+            border: '1px solid #BBF7D0',
+            borderRadius: 10,
+            padding: '12px 16px',
+            marginBottom: 16,
+            fontSize: 13,
+            color: '#15803D',
+          }}>
+            {fetchResult}
+          </div>
+        )}
+
+        {/* 점수 필터 + 통계 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {[
+              { val: 80, label: '80점+ 적극 추천', color: '#12B76A', bg: '#ECFDF3' },
+              { val: 60, label: '60점+ 검토 권장', color: '#2563EB', bg: '#EFF6FF' },
+              { val: 40, label: '40점+ 전체 보기', color: '#6B7280', bg: '#F5F5F5' },
+            ].map(s => (
               <button
-                key={s}
-                onClick={() => setMinScore(s)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                  minScore === s ? 'bg-white text-[#1e2c33]' : 'border border-white/30 text-white/70 hover:bg-white/10'
-                }`}
+                key={s.val}
+                onClick={() => setMinScore(s.val)}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: minScore === s.val ? 'none' : '1px solid #E8ECF0',
+                  backgroundColor: minScore === s.val ? s.bg : '#ffffff',
+                  color: minScore === s.val ? s.color : '#adbac9',
+                  transition: 'all 0.15s',
+                }}
               >
-                {s}+
+                {s.label}
               </button>
             ))}
           </div>
-        </div>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-6 py-6">
-        {/* 요약 */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-green-50 rounded-xl p-4">
-            <p className="text-2xl font-bold text-green-700">{items.filter(i => i.match_score >= 80).length}</p>
-            <p className="text-sm text-green-600 mt-1">적극 추천 (80점+)</p>
-          </div>
-          <div className="bg-blue-50 rounded-xl p-4">
-            <p className="text-2xl font-bold text-blue-700">{items.filter(i => i.match_score >= 60 && i.match_score < 80).length}</p>
-            <p className="text-sm text-blue-600 mt-1">검토 권장 (60-79점)</p>
-          </div>
-          <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-            <p className="text-2xl font-bold text-gray-700">{items.filter(i => i.match_score < 60).length}</p>
-            <p className="text-sm text-gray-500 mt-1">참고용 (60점 미만)</p>
-          </div>
+          <span style={{ fontSize: 12, color: '#adbac9' }}>총 {filtered.length}건</span>
         </div>
 
+        {/* 공고 리스트 */}
         {loading ? (
-          <div className="text-center py-20 text-gray-400">불러오는 중...</div>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: '#adbac9', fontSize: 14 }}>
+            불러오는 중...
+          </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-gray-400 mb-4">
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '80px 0',
+              backgroundColor: '#ffffff',
+              borderRadius: 16,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+            }}
+          >
+            <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+            <p style={{ color: '#adbac9', fontSize: 14, marginBottom: 20 }}>
               {items.length === 0 ? '아직 가져온 공고가 없습니다.' : `${minScore}점 이상 공고가 없습니다.`}
             </p>
             {items.length === 0 && (
               <button
                 onClick={fetchNew}
                 disabled={fetching}
-                style={{ backgroundColor: '#1e2c33' }}
-                className="px-6 py-2 rounded-lg text-white text-sm font-medium"
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: 10,
+                  backgroundColor: '#1e2c33',
+                  color: '#ffffff',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: 'none',
+                }}
               >
-                공고 가져오기
+                공고 분석 시작
               </button>
             )}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {filtered.map(item => {
               const dday = getDday(item.deadline)
               const isExpanded = expandedId === item.id
@@ -183,47 +273,61 @@ export default function RecommendPage() {
               return (
                 <div
                   key={item.id}
-                  className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-colors"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: 14,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                    overflow: 'hidden',
+                    border: '1px solid #F0F3F6',
+                    transition: 'box-shadow 0.15s',
+                  }}
                 >
                   <div
-                    className="p-4 cursor-pointer"
+                    style={{ padding: '16px 20px', cursor: 'pointer' }}
                     onClick={() => setExpandedId(isExpanded ? null : item.id)}
                   >
-                    <div className="flex items-start gap-3">
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                       <ScoreBadge score={item.match_score} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-gray-400">{item.ministry ?? '-'}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                          <SourceBadge source={item.source} />
+                          <span style={{ fontSize: 12, color: '#adbac9' }}>{item.ministry ?? '-'}</span>
                           {dday && (
-                            <span className={`text-xs font-medium ${dday.color}`}>{dday.label}</span>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: dday.color }}>{dday.label}</span>
                           )}
                           {item.deadline && (
-                            <span className="text-xs text-gray-300">{item.deadline}</span>
-                          )}
-                          {item.scale && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{item.scale}</span>
+                            <span style={{ fontSize: 11, color: '#ced7df' }}>{item.deadline}</span>
                           )}
                         </div>
-                        <p className="font-medium text-gray-900 truncate">{item.title}</p>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: '#1e2c33', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {item.title}
+                        </p>
                         {item.match_reason && (
-                          <p className="text-xs text-gray-500 mt-1">{item.match_reason}</p>
+                          <p style={{ fontSize: 12, color: '#707d89', marginTop: 4 }}>{item.match_reason}</p>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                         {isAdded ? (
-                          <span className="text-xs text-green-600 font-medium">✓ 추가됨</span>
+                          <span style={{ fontSize: 12, color: '#12B76A', fontWeight: 600 }}>✓ 추가됨</span>
                         ) : (
                           <button
-                            onClick={async (e) => {
+                            onClick={async e => {
                               e.stopPropagation()
-                              // 공고 관리 페이지에 추가하는 기능 (추후 구현)
                               setAddedIds(prev => new Set([...prev, item.id]))
                               alert('공고 추가 기능은 곧 구현됩니다.\n현재는 공고 관리 페이지에서 직접 추가해주세요.')
                             }}
-                            style={{ backgroundColor: '#1e2c33' }}
-                            className="text-xs px-3 py-1.5 rounded-lg text-white hover:opacity-90"
+                            style={{
+                              fontSize: 12,
+                              padding: '6px 12px',
+                              borderRadius: 7,
+                              backgroundColor: '#1e2c33',
+                              color: '#ffffff',
+                              border: 'none',
+                              cursor: 'pointer',
+                              fontWeight: 600,
+                            }}
                           >
-                            + 공고 추가
+                            + 추가
                           </button>
                         )}
                         {item.url && item.url.startsWith('http') && (
@@ -231,29 +335,37 @@ export default function RecommendPage() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="text-xs px-2 py-1 rounded border border-gray-200 text-gray-500 hover:text-[#1e2c33] hover:border-gray-400 transition-colors"
+                            onClick={e => e.stopPropagation()}
+                            style={{
+                              fontSize: 12,
+                              padding: '6px 12px',
+                              borderRadius: 7,
+                              border: '1px solid #E8ECF0',
+                              color: '#707d89',
+                              textDecoration: 'none',
+                              fontWeight: 500,
+                            }}
                           >
-                            원문 보기 🔗
+                            원문 보기 ↗
                           </a>
                         )}
-                        <span className="text-gray-300 text-sm">{isExpanded ? '▲' : '▼'}</span>
+                        <span style={{ color: '#ced7df', fontSize: 12 }}>{isExpanded ? '▲' : '▼'}</span>
                       </div>
                     </div>
                   </div>
 
                   {isExpanded && (
-                    <div className="px-4 pb-4 border-t border-gray-100 pt-4 space-y-3">
+                    <div style={{ padding: '16px 20px', borderTop: '1px solid #F5F7FA', backgroundColor: '#FAFBFC' }}>
                       {item.description && (
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1 font-medium">지원 내용</p>
-                          <p className="text-sm text-gray-700 leading-relaxed">{item.description}</p>
+                        <div style={{ marginBottom: 12 }}>
+                          <p style={{ fontSize: 11, color: '#adbac9', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>지원 내용</p>
+                          <p style={{ fontSize: 13, color: '#384e5d', lineHeight: 1.7 }}>{item.description}</p>
                         </div>
                       )}
-                      {item.eligibility && (
+                      {item.eligibility && item.eligibility !== '지원 가능' && (
                         <div>
-                          <p className="text-xs text-gray-400 mb-1 font-medium">신청 자격</p>
-                          <p className="text-sm text-gray-700 leading-relaxed">{item.eligibility}</p>
+                          <p style={{ fontSize: 11, color: '#adbac9', fontWeight: 600, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>신청 자격</p>
+                          <p style={{ fontSize: 13, color: '#384e5d', lineHeight: 1.7 }}>{item.eligibility}</p>
                         </div>
                       )}
                     </div>
@@ -263,7 +375,7 @@ export default function RecommendPage() {
             })}
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }
