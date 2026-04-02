@@ -217,7 +217,7 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
                   <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ backgroundColor: '#FAFBFC' }}>
-                        {['구분', '주관부처', '사업명', '마감일', 'D-day', '규모', '배정예산', '연구책임자', '작성담당자', '제안서', '발표자료'].map(h => (
+                        {['구분', '주관부처', '사업명', '참여형태', '마감일', 'D-day', '규모', '배정예산', '연구책임자', '작성담당자', '제안서', '발표자료'].map(h => (
                           <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 600, color: '#adbac9', whiteSpace: 'nowrap', fontSize: 11, letterSpacing: '0.2px' }}>
                             {h}
                           </th>
@@ -250,6 +250,17 @@ export default function ProjectGrouped({ projects, onStatusChange, onAdd, onUpda
                               {p.our_project_name && p.our_project_name !== p.project_name && (
                                 <div style={{ fontSize: 11, color: '#adbac9', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 2 }}>{p.our_project_name}</div>
                               )}
+                            </td>
+                            <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
+                              {p.implementation_type ? (
+                                <span style={{
+                                  fontSize: 11, padding: '2px 8px', borderRadius: 5, fontWeight: 600,
+                                  backgroundColor: p.implementation_type === '주관' || p.implementation_type === '단독' ? '#FEF2F2' : p.implementation_type === '공동' ? '#EFF6FF' : '#FEF9C3',
+                                  color: p.implementation_type === '주관' || p.implementation_type === '단독' ? '#DC2626' : p.implementation_type === '공동' ? '#2563EB' : '#854D0E',
+                                }}>
+                                  {p.implementation_type}
+                                </span>
+                              ) : <span style={{ color: '#ced7df' }}>-</span>}
                             </td>
                             <td style={{ padding: '12px 14px', whiteSpace: 'nowrap', color: '#707d89' }}>
                               {p.application_end ? p.application_end.slice(0, 10) : '-'}

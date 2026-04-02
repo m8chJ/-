@@ -102,7 +102,7 @@ export default function ProjectDetailModal({ project: p, onClose, onStatusChange
           <Info label="지원 시작" value={p.application_start?.slice(0, 10)} />
           <Info label="규모" value={p.scale_100m ? `${p.scale_100m}억원` : null} />
           <Info label="기간" value={p.duration} />
-          <Info label="수행 형태" value={p.implementation_type} />
+          <Info label="참여 형태" value={p.implementation_type} />
           <Info label="컨소시엄" value={p.consortium} />
           <Info label="총괄 책임자" value={p.manager} />
           <Info label="작성 책임자" value={p.writer} />

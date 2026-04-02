@@ -106,12 +106,13 @@ export default function AddEditProjectModal({ project, onClose, onSave }: Props)
             <input className={input} value={form.our_project_name ?? ''} onChange={e => set('our_project_name', e.target.value)} />
           </Field>
 
-          <Field label="수행 형태">
+          <Field label="참여 형태">
             <select className={input} value={form.implementation_type ?? ''} onChange={e => set('implementation_type', e.target.value)}>
               <option value="">선택</option>
-              <option>단독</option>
               <option>주관</option>
               <option>공동</option>
+              <option>위탁</option>
+              <option>단독</option>
             </select>
           </Field>
 
